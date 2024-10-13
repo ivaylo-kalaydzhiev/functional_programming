@@ -1,3 +1,4 @@
+# Scheme
 *.ss~
 *.ss#*
 .#*.ss
@@ -5,3 +6,31 @@
 *.scm~
 *.scm#*
 .#*.scm
+
+# Byte-compiled files
+compiled/
+
+# Temporary files
+*.zo
+*.dep
+
+# DrRacket backup and autosave files
+*.bak
+*.sav
+*.backup
+*~
+
+# Other editor temporary files
+*.swp
+*.swo
+*.tmp
+
+# macOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
