@@ -130,3 +130,124 @@
 (define (automorphic? num)
   (ends-with? (* num num) num))
 
+(define (id x) x)
+(define (1+ x) (+ 1 x))
+(define (&& p q) (and p q))
+(define (|| p q) (or p q))
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+(define (acc-fact n)
+  (accumulate-i * 1 1 n id 1+))
+
+(define (acc-expt x n)
+  (accumulate-i * 1 1 n (lambda (a) x) 1+))
+
+
+; If you can make the .. into a recursive definition - do that
+; If you can make the .. into a sum/ product/ and/ or/ func composition - use accum
+; -> accum and accum-i are equivalent, unless you have an op that is
+;    strictly left/ right associative
+; If you can benefit from list representation use it
+; If working with lists use folding
+; In any case solving the task mathematically first is genius!!!
+
+(define (apply-f f n)
+  (accumulate compose id 1 n (lambda (i) f) 1+))
+
+
+; Week 3
+(define (const c) (lambda (x) c))
+
+(define (fmax f g)
+  (lambda (x)
+    (if (> (f x) (g x)) f g)))
+
+
+(define (repeat n f)
+  (accumulate compose id 1 n (const f) 1+))
+
+(define (repeated n f x)
+  ((repeat n f) x))
+
+(define (all p? a b)
+  (accumulate && #t a b (lambda (x) (p? x)) 1+))
+
+(define (any? p? a b)
+  (accumulate || #f a b (lambda (x) (p? x)) 1+))
+
+(define (count p? a b)
+  (accumulate + 0 a b (lambda (x) (if (p? x) 1 0)) 1+))
+
+
+; Working with lists
+; length, append, reverse, list-tail n (list without first n elements)
+; list-ref n, member, memv, memq
+; ?? from-to, collect
+; Lists problem types
+; - looping trough lists
+; - constructing lists
+
+(define (listify num)
+  (define (helper acc num)
+    (if (< num 10)
+        (cons num acc)
+        (helper (cons (remainder num 10) acc) (quotient num 10))))
+  (helper '() num))
+
+(define (length-1 lst)
+  (define (helper acc lst)
+    (if (null? lst)
+        acc
+        (helper (1+ acc) (cdr lst))))
+  (helper 0 lst))
+
+(define (list-at lst pos)
+  (if (= pos 0)
+      (car lst)
+      (list-at (cdr lst) (- pos 1))))
+
+
+; Week 4
+(define (len lst)
+  (if (null? lst)
+      0
+      (+ 1 (len (cdr lst)))))
+
+(define (minimum lst)
+  (apply min lst))
+
+(define (any? p? lst)
+  (if (null? lst)
+      #f
+      (or (p? (car lst)) (any? p? (cdr lst)))))
+
+(define (all? p? lst)
+  (if (null? lst)
+      #t
+      (and (p? (car lst)) (all? p? (cdr lst)))))
+
+(define (member? x lst)
+  (if (null? lst)
+      #f
+      (or (= x (car lst)) (member? x (cdr lst)))))
+
+(define (at n lst)
+  (if (null? lst)
+      #f
+      (if (= n 0)
+          (car lst)
+          (at (- n 1) (cdr lst)))))
+
+(define (push-back x lst)
+  (reverse (cons x (reverse lst))))
+
+(define (insert x n lst)
+  (if (null? lst)
+      (cons x lst)
+      (if (= 0 n)
+          (cons x lst)
+          (cons (car lst) (insert x (- n 1) (cdr lst))))))
+
+(define (range a b)
+  (accumulate cons '() a b id 1+))
