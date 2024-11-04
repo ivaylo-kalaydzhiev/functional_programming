@@ -300,3 +300,59 @@
       '()
       (cons (car lst) (take-while p? (cdr lst)))))
 
+
+; FINAL PRACTICE
+
+; (1)
+(define (listify num)
+  (define (helper acc num)
+    (if (< num 10)
+        (cons num acc)
+        (helper (cons (remainder num 10) acc)
+                (quotient num 10))))
+  (helper '() num))
+
+(define (palindrome? num)
+  (let* ((numList (listify num))
+          (numListRev (reverse numList)))
+    (equal? numList numListRev)))
+
+; (2)
+(define (count-palindromes a b)
+  (accumulate + 0 a b (lambda (x) (if (palindrome? x) 1 0)) 1+))
+
+; (3)
+(define (sum-primes n k)
+  (define (helper acc n k)
+    (if (zero? n)
+        acc
+        (if (prime? (1+ k))
+            (helper (+ acc (1+ k)) (- n 1) (1+ k))
+            (helper acc n (1+ k)))))
+  (helper 0 n k))
+
+; (4)
+(define (count-divs-by num k)
+  (define (helper acc num k)
+    (if (not (zero? (remainder num k)))
+        acc
+        (helper (1+ acc) (quotient num k) k)))
+  (helper 0 num k))
+
+
+(define (count-divs-by-pair num k)
+  (cons k (count-divs-by num k)))
+
+
+(define (potential-factors num)
+  (filter prime? (range 0 num)))
+
+(define (all-prime-factors num)
+  (map (lambda (x) (count-divs-by-pair num x))
+       (potential-factors num)))
+
+(define (prime-factors num)
+  (filter (lambda (pair) (not (zero? (cdr pair))))
+          (all-prime-factors num)))
+
+
