@@ -251,3 +251,52 @@
 
 (define (range a b)
   (accumulate cons '() a b id 1+))
+
+; Week 5
+(define (sum lst)
+  (foldr + 0 lst))
+
+(define (len lst)
+  (foldr + 0 (map (const 1) lst)))
+
+(define (any? p? lst)
+  (foldr || #f (map p? lst)))
+
+(define (all? p? lst)
+  (foldr && #t (map p? lst)))
+
+(define (minimum lst)
+  (foldr min (car lst) (cdr lst)))
+
+(define (fold-map f lst)
+  (foldr (lambda (term acc) (cons (f term) acc)) '() lst))
+
+(define (fold-filter p? lst)
+  (foldr (lambda (term acc) (append (if (p? term) (list term) '()) acc)) '() lst))
+
+; '( ) '(1 2 3 4)
+; '(1) '(2 3 4)
+; '(2 1) '(3 4)
+; snoc '() 1 -> '(1 . ()) = '(1)
+; snoc '(1) 2 -> '(2 1)
+; snoc also prepends, it is just that it takes switches the
+; places of the parameters, nothing more
+
+(define (fold-reverse lst)
+  (foldl (lambda (acc term) (cons term acc)) '() lst))
+
+(define (take n lst)
+  (if (= n 0)
+      '()
+      (cons (car lst) (take (- n 1) (cdr lst)))))
+
+(define (drop n lst)
+  (if (= n 0)
+      lst
+      (drop (- n 1) (cdr lst))))
+
+(define (take-while p? lst)
+  (if (not (p? (car lst)))
+      '()
+      (cons (car lst) (take-while p? (cdr lst)))))
+
