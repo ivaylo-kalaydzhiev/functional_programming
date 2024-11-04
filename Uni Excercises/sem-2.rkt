@@ -44,7 +44,8 @@
   (= (remainder num 10) digit))
 
 (define (ends-with? num end-num)
-  (if (= 0 (quotient end-num 10)) (ends-with-digit? num end-num)
+  (if (= 0 (quotient end-num 10))
+      (ends-with-digit? num end-num)
       (and (ends-with-digit? num (remainder end-num 10)) (ends-with? (quotient num 10) (quotient end-num 10)))))
 
 (ends-with-digit? 12 2)

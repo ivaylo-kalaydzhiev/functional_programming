@@ -28,7 +28,7 @@
   (foldl op (car l) (cdr l)))
 
 ; Syntax practice
-; case, cond, define
+; case, cond, define, let, let*
 
 ; Built-in functions
 ; remainder, quotient, /
@@ -86,4 +86,47 @@
         acc
         (helper (+ acc (car l)) (cdr l))))
   (helper 0 l))
+
+; Week 2
+(define (sum-digits n)
+  (define (helper acc n)
+    (if (= n 0)
+        acc
+        (helper (+ acc (remainder n 10)) (quotient n 10))))
+  (helper 0 (abs n)))
+
+(define (count-divisors num)
+  (define (helper acc a b)
+    (define term (if (= 0 (remainder b a)) 1 0))
+    (if (> a b)
+        acc
+        (helper (+ acc term) (+ 1 a) b)))
+  (helper 0 1 num))
+
+(define (prime? num)
+  (= 2 (count-divisors num)))
+
+(define (listify num)
+  (define (helper acc num)
+    (if (< num 10)
+        (cons num acc)
+        (helper (cons (remainder num 10) acc)
+                (quotient num 10))))
+  (helper '() num))
+
+(define (increasing-digits? num)
+  (apply < (listify num)))
+
+(define (ends-with? num1 num2)
+  (define (helper acc num1 num2)
+    (if (< num2 10)
+        (and acc (= (remainder num1 10) num2))
+        (helper (and acc
+                     (= (remainder num1 10) (remainder num2 10)))
+                (quotient num1 10)
+                (quotient num2 10))))
+  (helper #t num1 num2))
+
+(define (automorphic? num)
+  (ends-with? (* num num) num))
 
