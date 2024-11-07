@@ -356,3 +356,6 @@
           (all-prime-factors num)))
 
 
+
+; Hard part
+
